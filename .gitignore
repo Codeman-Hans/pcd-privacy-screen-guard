@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+
+# Data pribadi: jangan diunggah
+data/
+*.log
+kejadian_*.jpg
+
+# Model diunduh ulang lewat README
+models/*.tflite
