@@ -22,7 +22,7 @@ from mediapipe.tasks.python import vision
 # Menentukan lokasi file model deteksi wajah
 MODEL = "models/blaze_face_short_range.tflite"
 # Menentukan apakah penutup tampil layar penuh; mulai dengan False untuk uji
-LAYAR_PENUH = True
+LAYAR_PENUH = False
 # Menentukan berapa frame berturut-turut sebelum status layar berubah
 BATAS_FRAME = 8
 # Menentukan faktor pengecilan gambar sebelum diblur supaya lebih cepat
@@ -230,17 +230,16 @@ while True:
         buka_overlay()
         # Menandai bahwa layar sekarang tertutup
         layar_tertutup = True
+        # Membunyikan alarm saat layar baru saja ditutup karena bahaya
+        if ALARM_AKTIF:
+            # Memanggil fungsi alarm
+            bunyikan_alarm()
     # Membuka layar kalau tertutup dan kondisi aman bertahan cukup lama
     elif layar_tertutup and hitung_aman >= BATAS_FRAME:
         # Menutup jendela penutup
         cv2.destroyWindow(NAMA_OVERLAY)
         # Menandai bahwa layar sekarang terbuka
         layar_tertutup = False
-    # Membunyikan alarm kalau alarm sedang aktif
-        if ALARM_AKTIF:
-            # Memanggil fungsi alarm
-            bunyikan_alarm()
-
     # Menggambar pita berwarna di bagian atas frame sebagai latar status
     cv2.rectangle(frame, (0, 0), (frame.shape[1], 50), warna_status, -1)
     # Menulis teks status di atas pita

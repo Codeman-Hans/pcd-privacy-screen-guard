@@ -82,13 +82,15 @@ def analisis_wajah(wajah):
     if len(titik) < 3:
         # Mengembalikan jarak dan nilai yaw yang besar
         return jarak, 9.9
-    # Mengambil titik mata pertama
+    # Mengambil titik mata kanan (indeks 0 dalam urutan BlazeFace)
     mata_a = titik[0]
-    # Mengambil titik mata kedua
+    # Mengambil titik mata kiri (indeks 1 dalam urutan BlazeFace)
     mata_b = titik[1]
-    # Mengambil titik ujung hidung
+    # Mengambil titik ujung hidung (indeks 2 dalam urutan BlazeFace)
     hidung = titik[2]
     # Menghitung jarak horizontal antara kedua mata
+    # Catatan: urutan mata kanan/kiri tidak mempengaruhi rumus yaw
+    # karena yang dipakai hanya titik tengah dan selisih absolut keduanya
     jarak_mata = abs(mata_a.x - mata_b.x)
     # Kalau jarak mata hampir nol, wajah dianggap menoleh jauh
     if jarak_mata < 1e-6:
@@ -97,6 +99,7 @@ def analisis_wajah(wajah):
     # Menghitung titik tengah kedua mata secara horizontal
     tengah = (mata_a.x + mata_b.x) / 2
     # Menghitung yaw: pergeseran hidung dari tengah dibagi jarak mata
+    # yaw mendekati 0 berarti hidung tepat di tengah = wajah menghadap kamera
     yaw = (hidung.x - tengah) / jarak_mata
     # Mengembalikan jarak dan yaw
     return jarak, yaw
@@ -379,8 +382,8 @@ while True:
 
     # Menampilkan frame kamera di jendela kamera
     cv2.imshow("Tahap 6 - Kamera", frame)
-    # Kalau layar sedang tertutup, tampilkan gambar buram di penutup
-    if status_aktif in STATUS_TUTUP:
+    # Kalau layar sedang tertutup dan gambar sudah siap, tampilkan di penutup
+    if status_aktif in STATUS_TUTUP and gambar_buram is not None:
         # Menampilkan gambar buram di jendela penutup
         cv2.imshow(NAMA_OVERLAY, gambar_buram)
 
